@@ -1,0 +1,50 @@
+# --- Secrets -----------------------------------------------------------------
+.env
+.env.local
+.env*.local
+
+# --- Dependencies / build ----------------------------------------------------
+node_modules/
+.next/
+out/
+build/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# --- Agent working files -----------------------------------------------------
+.agent-cache/
+nextjs/.agent-cache/
+
+# --- The shop's live data ----------------------------------------------------
+# Deliberately not published, and ignored as a whole directory rather than file by
+# file. It began as a list — catalog, uploads, media, runs — and the system then
+# grew repair tickets carrying customers' names, phone numbers and home addresses,
+# a sales register, the ledgers and the books. An allowlist only stays safe while
+# somebody remembers to extend it, and this one had already fallen behind.
+#
+# What is in here: selling prices and MRPs, from which margins are trivially read;
+# brand product photography whose rights sit with the brands; customers' personal
+# details; and the firm's own accounts. The code that produces all of it is in the
+# repository. The data is not. Remove this line if the shop decides otherwise.
+*.xlsx
+*.xls
+nextjs/data/
+
+# Two exceptions, both agent configuration rather than shop data: the generated
+# backdrop definitions the storefront renders against, and the brand memory base —
+# which official site belongs to which maker and which of them refuse automated
+# readers. Shipping the second means a fresh clone inherits that knowledge instead
+# of paying to rediscover it.
+!nextjs/data/backdrops.json
+!nextjs/data/brands.json
+
+# --- OS noise ----------------------------------------------------------------
+.DS_Store
+*.log
+npm-debug.log*
+
+# Run logs. They are a transcript of the shop's own catalogue — prices, stock and
+# source URLs, line by line — so they belong with the data, not the code.
+runs/

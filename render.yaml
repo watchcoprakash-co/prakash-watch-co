@@ -1,0 +1,43 @@
+# Render Blueprint — see DEPLOYMENT.md for the full walkthrough.
+#
+# One Web Service, Docker-built, running both the storefront/admin (Next.js)
+# and the ingestion agent (agent-py) as described in the root Dockerfile.
+# They share the one persistent disk below, because agent-py writes catalog
+# artifacts straight onto the path Next.js reads them from.
+services:
+  - type: web
+    name: prakash-watch-co
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter # cheapest plan with a persistent disk — the free tier has none
+    region: singapore # closest Render region to India; change if you prefer
+    healthCheckPath: /api/health
+    disk:
+      name: shop-data
+      mountPath: /app/nextjs/data
+      sizeGB: 5
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENROUTER_API_KEY
+        sync: false # set in the Render dashboard — never committed
+      - key: OPENROUTER_MODEL
+        value: openai/gpt-5.4-mini
+      - key: OPENROUTER_VISION_MODEL
+        value: openai/gpt-5.4-mini
+      - key: OPENROUTER_SEARCH_MODEL
+        value: openai/gpt-5.4-nano
+      - key: OPENROUTER_APP_URL
+        value: https://prakashwatchco.in
+      - key: OPENROUTER_APP_TITLE
+        value: Prakash Watch Co. Catalog Agent
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_SECRET
+        sync: false
+      - key: AGENT_SERVICE_URL
+        value: http://127.0.0.1:8077
+      - key: AGENT_SERVICE_TOKEN
+        sync: false
+      - key: AGENT_ALLOWED_ORIGINS
+        value: https://prakashwatchco.in,https://www.prakashwatchco.in
