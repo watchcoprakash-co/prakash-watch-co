@@ -20,6 +20,13 @@ RUN python3 -m venv /opt/venv \
 ENV PATH="/opt/venv/bin:${PATH}"
 
 # --- nextjs ---------------------------------------------------------------
+# Pinned: newer npm defaults block install scripts unless explicitly
+# approved (seen on Vercel's build — a warning there, but sharp needs its
+# install script to fetch its native binary, so on a host without approval
+# wired up it would silently break photo uploads instead). 10.9.3 is the
+# version this was last verified against with a clean install.
+RUN npm install -g npm@10.9.3
+
 COPY nextjs/package.json nextjs/package-lock.json ./nextjs/
 RUN cd nextjs && npm ci
 
