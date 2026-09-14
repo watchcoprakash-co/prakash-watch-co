@@ -103,9 +103,37 @@ this one container).
 
 ## 3. Vercel setup
 
-Not used in this plan — see the note at the top. If you want the storefront
-split onto Vercel later, that's a follow-up task involving a small code
-change, not a config-only one.
+**Known limitation, by choice:** this deploys the exact same code as Render,
+unmodified. Vercel can't reach the disk that holds the catalogue, so the
+storefront will show 0 watches, and every write path (admin edits, billing,
+repair tickets) will fail — the public repair form specifically will show a
+raw error rather than a clean message, since that route has no fallback for
+a disk it can't write to. This deployment is for confirming the build
+pipeline and having a live Vercel URL, not for real traffic. See the
+recommended fix mentioned at the top of this file when you're ready to make
+it functional.
+
+1. [vercel.com/new](https://vercel.com/new) → **Import Git Repository** →
+   select `watchcoprakash-co/prakash-watch-co`.
+2. On the **Configure Project** screen: **Root Directory → Edit → select
+   `nextjs`**. This is the one setting that matters — the repo is a
+   monorepo (`nextjs/` + `agent-py/`), and Vercel needs to be told which
+   half to build. Framework Preset should auto-detect as **Next.js** once
+   that's set.
+3. Environment variables (all optional for this throwaway deploy — add them
+   only if you want to click through the login screen; nothing will persist
+   after):
+   | Variable | Value |
+   |---|---|
+   | `ADMIN_PASSWORD` | anything, if you want `/login` to succeed |
+   | `ADMIN_SECRET` | anything 32+ chars |
+   Leave `AGENT_SERVICE_URL` unset — there's no agent-py reachable from
+   Vercel, so ingestion-related admin pages will show a clear "could not
+   reach the agent" message instead of trying to hit `127.0.0.1`.
+4. **Deploy.** Build should complete clean (verified locally before this was
+   pushed). You'll get a `*.vercel.app` URL — don't point
+   `prakashwatchco.in` at it; that domain belongs to the Render deployment
+   in this plan.
 
 ## 4. Hostinger DNS configuration
 
