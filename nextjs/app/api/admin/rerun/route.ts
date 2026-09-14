@@ -12,7 +12,9 @@ import { requireAuth } from "@/lib/auth";
 import { getAllProducts, getProduct } from "@/lib/catalog";
 
 export const runtime = "nodejs";
-export const maxDuration = 900;
+// 300 is Vercel's own ceiling (Hobby plan rejects anything higher at build
+// time); on Render's persistent process this value is inert either way.
+export const maxDuration = 300;
 
 const AGENT_URL = process.env.AGENT_SERVICE_URL ?? "http://127.0.0.1:8077";
 const MAX_AT_ONCE = 500;
